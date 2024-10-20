@@ -30,6 +30,18 @@ class AppTheme {
           color: white
         )
       ),
+    ),
+    textTheme: TextTheme(
+      titleMedium: TextStyle(
+        color: black,
+        fontSize: 18,
+        fontWeight: FontWeight.bold
+      ),
+      titleSmall: TextStyle(
+        color: black,
+        fontSize: 14,
+        fontWeight: FontWeight.w400
+      )
     )
   );
 
