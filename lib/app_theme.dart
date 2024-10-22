@@ -42,6 +42,12 @@ class AppTheme {
         fontSize: 14,
         fontWeight: FontWeight.w400
       )
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primary,
+      
+      )
     )
   );
 
@@ -55,6 +61,28 @@ class AppTheme {
       unselectedItemColor: gray,
       showSelectedLabels: false,
       showUnselectedLabels: false,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: primary,
+      foregroundColor: white,
+      shape: CircleBorder(
+        side: BorderSide(
+          width: 4,
+          color: white
+        )
+      ),
+    ),
+    textTheme: TextTheme(
+      titleMedium: TextStyle(
+        color: white,
+        fontSize: 18,
+        fontWeight: FontWeight.bold
+      ),
+      titleSmall: TextStyle(
+        color: white,
+        fontSize: 14,
+        fontWeight: FontWeight.w400
+      )
     )
   );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/app_theme.dart';
 import 'package:todo_app/tabs/settings/settings_tab.dart';
+import 'package:todo_app/tabs/tasks/bottom_sheet_screen.dart';
 import 'package:todo_app/tabs/tasks/tasks_tab.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,18 +41,25 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: selectedScreen,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
-            BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: 'Settings')
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (_) {
+                return BottomSheetScreen();
+              });
+        },
         child: Icon(
-        Icons.add,
-        size: 32,
+          Icons.add,
+          size: 32,
         ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
