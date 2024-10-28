@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
 import 'package:todo_app/compnent/com_elevated_button.dart';
 import 'package:todo_app/compnent/com_text_form_field.dart';
 import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/models/task_models.dart';
+import 'package:todo_app/tabs/tasks/tasks_provider.dart';
 
 class BottomSheetScreen extends StatefulWidget {
   const BottomSheetScreen({super.key});
@@ -121,11 +123,10 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
       Duration(milliseconds: 100),
       onTimeout: () {
         Navigator.of(context).pop();
-        print('task added');
+        Provider.of<TasksProvider>(context,listen: false).getTasks();
       },
     ).catchError((error) {
       print(error);
     });
-    
   }
 }
