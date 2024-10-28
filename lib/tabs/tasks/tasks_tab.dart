@@ -48,8 +48,12 @@ class _TasksTabState extends State<TasksTab> {
                   top: MediaQuery.of(context).size.height * 0.15),
               child: EasyInfiniteDateTimeLine(
                 firstDate: DateTime.now().subtract(const Duration(days: 30)),
-                focusDate: DateTime.now(),
+                focusDate: tasksProvider.selectedDate,
                 lastDate: DateTime.now().add(const Duration(days: 30)),
+                onDateChange: (selectedDate) {
+                  tasksProvider.changeSelectedDate(selectedDate);
+                  tasksProvider.getTasks();
+                },
                 showTimelineHeader: false,
                 dayProps: EasyDayProps(
                   height: 79,
@@ -68,6 +72,18 @@ class _TasksTabState extends State<TasksTab> {
                           fontWeight: FontWeight.bold,
                           color: AppTheme.primary)),
                   inactiveDayStyle: DayStyle(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppTheme.white),
+                      dayNumStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black),
+                      dayStrStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black)),
+                  todayStyle: DayStyle(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: AppTheme.white),

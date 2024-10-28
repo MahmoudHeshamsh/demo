@@ -4,9 +4,21 @@ import 'package:todo_app/models/task_models.dart';
 
 class TasksProvider with ChangeNotifier {
   List<TaskModels> tasks = [];
+  DateTime selectedDate = DateTime.now();
 
   Future<void> getTasks() async {
     tasks = await FirebaseFunctions.getTasksFromFireStore();
+    tasks = tasks.where(
+      (task) =>
+       task.date.year == selectedDate.year &&
+       task.date.month == selectedDate.month &&
+       task.date.day == selectedDate.day        
+       ).toList();
+    notifyListeners();
+  }
+
+  void changeSelectedDate(DateTime date) {
+    selectedDate = date;
     notifyListeners();
   }
 }

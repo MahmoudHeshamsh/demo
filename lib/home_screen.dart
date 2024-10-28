@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
               builder: (_) {
                 return BottomSheetScreen();
               });
