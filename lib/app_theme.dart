@@ -13,7 +13,7 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     primaryColor: primary,
     scaffoldBackgroundColor: backgroundLight,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: white,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: primary,
@@ -21,7 +21,7 @@ class AppTheme {
       showSelectedLabels: false,
       showUnselectedLabels: false,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primary,
       foregroundColor: white,
       shape: CircleBorder(
@@ -31,7 +31,7 @@ class AppTheme {
         )
       ),
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       titleMedium: TextStyle(
         color: black,
         fontSize: 18,
@@ -54,7 +54,7 @@ class AppTheme {
   static ThemeData darkTheme = ThemeData(
     primaryColor: primary,
     scaffoldBackgroundColor: backgroundDark,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: black,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: primary,
@@ -62,7 +62,7 @@ class AppTheme {
       showSelectedLabels: false,
       showUnselectedLabels: false,
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primary,
       foregroundColor: white,
       shape: CircleBorder(
@@ -72,7 +72,7 @@ class AppTheme {
         )
       ),
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       titleMedium: TextStyle(
         color: white,
         fontSize: 18,

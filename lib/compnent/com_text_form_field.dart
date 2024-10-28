@@ -6,7 +6,7 @@ class ComTextFormField extends StatelessWidget {
   String hintText;
   String? Function(String?)? validator;
 
-  ComTextFormField({
+  ComTextFormField({super.key, 
     required this.controller,
     required this.hintText,
     required this.validator,

@@ -7,6 +7,8 @@ import 'package:todo_app/tabs/tasks/tasks_tab.dart';
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home_screen';
 
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -30,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: tabs[current_index],
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         padding: EdgeInsets.zero,
@@ -39,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           currentIndex: current_index,
           onTap: selectedScreen,
-          items: [
+          items: const [
             BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings), label: 'Settings')
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return BottomSheetScreen();
               });
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 32,
         ),

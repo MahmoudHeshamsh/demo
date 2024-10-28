@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/app_theme.dart';
 import 'package:todo_app/tabs/tasks/tasks.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:todo_app/firebase_functions.dart';
+import 'package:todo_app/models/task_models.dart';
 
-class TasksTab extends StatelessWidget {
+class TasksTab extends StatefulWidget {
+  const TasksTab({super.key});
+
+  @override
+  State<TasksTab> createState() => _TasksTabState();
+}
+
+class _TasksTabState extends State<TasksTab> {
+  List<TaskModels> tasks = [];
 
   @override
   Widget build(BuildContext context) {
+    if (tasks.isEmpty) {
+      getTasks();
+    }
     return Column(
       children: [
         Stack(
@@ -22,67 +35,65 @@ class TasksTab extends StatelessWidget {
               child: Text(
                 'To Do List',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppTheme.white,
-                  fontSize: 22,
-                ),
+                      color: AppTheme.white,
+                      fontSize: 22,
+                    ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.15),
               child: EasyInfiniteDateTimeLine(
-                firstDate: DateTime.now().subtract(Duration(days: 30)),
-                focusDate: DateTime.now(), 
-                lastDate: DateTime.now().add(Duration(days: 30)),
+                firstDate: DateTime.now().subtract(const Duration(days: 30)),
+                focusDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 30)),
                 showTimelineHeader: false,
                 dayProps: EasyDayProps(
                   height: 79,
                   width: 58,
                   dayStructure: DayStructure.dayStrDayNum,
                   activeDayStyle: DayStyle(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppTheme.white
-                    ),
-                    dayNumStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primary
-                    ),
-                    dayStrStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primary
-                    )
-                  ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppTheme.white),
+                      dayNumStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primary),
+                      dayStrStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primary)),
                   inactiveDayStyle: DayStyle(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppTheme.white
-                    ),
-                    dayNumStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.black
-                    ),
-                    dayStrStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.black
-                    )
-                  ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppTheme.white),
+                      dayNumStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black),
+                      dayStrStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black)),
                 ),
-                ),
+              ),
             ),
           ],
         ),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.only(top: 5),
-            itemBuilder: (_,index) => Tasks(),
-            itemCount: 10,
+            padding: const EdgeInsets.only(top: 5),
+            itemBuilder: (_, index) => Tasks(tasks[index]),
+            itemCount: tasks.length,
           ),
         ),
       ],
     );
+  }
+
+  Future<void> getTasks() async {
+    tasks = await FirebaseFunctions.getTasksFromFireStore();
+    setState(() {});
   }
 }

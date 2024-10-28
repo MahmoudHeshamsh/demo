@@ -5,7 +5,7 @@ class ComElevatedButton extends StatelessWidget {
   String label;
   VoidCallback onPressed;
 
-  ComElevatedButton({required this.label, required this.onPressed});
+  ComElevatedButton({super.key, required this.label, required this.onPressed});
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(

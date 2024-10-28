@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/app_theme.dart';
 import 'package:todo_app/compnent/com_elevated_button.dart';
 import 'package:todo_app/compnent/com_text_form_field.dart';
+import 'package:todo_app/firebase_functions.dart';
+import 'package:todo_app/models/task_models.dart';
 
 class BottomSheetScreen extends StatefulWidget {
+  const BottomSheetScreen({super.key});
+
   @override
   State<BottomSheetScreen> createState() => _BottomSheetScreenState();
 }
@@ -26,7 +32,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         color: AppTheme.white,
         borderRadius: BorderRadius.circular(25),
       ),
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       height: MediaQuery.sizeOf(context).height * 0.45,
       width: double.infinity,
       child: Form(
@@ -49,7 +55,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
                 return null;
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             ComTextFormField(
@@ -62,7 +68,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
                 return null;
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             Text(
@@ -74,7 +80,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
                 DateTime? datetime = await showDatePicker(
                     context: context,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 30)),
+                    lastDate: DateTime.now().add(const Duration(days: 30)),
                     initialEntryMode: DatePickerEntryMode.calendarOnly,
                     initialDate: selectedDate);
                 setState(() {
@@ -92,12 +98,12 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             ComElevatedButton(
                 label: 'Add',
                 onPressed: () {
-                  if(formKey.currentState!.validate()){
-                        addTask;
+                  if (formKey.currentState!.validate()) {
+                    addTask();
                   }
                 })
           ],
@@ -106,5 +112,20 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
     );
   }
 
-  void addTask() {}
+  void addTask() {
+    TaskModels taskModel = TaskModels(
+        title: taskController.text,
+        description: discriptionController.text,
+        date: selectedDate);
+    FirebaseFunctions.addTaskToFirestore(taskModel).timeout(
+      Duration(milliseconds: 100),
+      onTimeout: () {
+        Navigator.of(context).pop();
+        print('task added');
+      },
+    ).catchError((error) {
+      print(error);
+    });
+    
+  }
 }
