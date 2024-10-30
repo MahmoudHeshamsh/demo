@@ -8,7 +8,6 @@ import 'package:todo_app/models/task_models.dart';
 import 'package:todo_app/tabs/tasks/tasks_provider.dart';
 
 class TasksTab extends StatefulWidget {
-  const TasksTab({super.key});
 
   @override
   State<TasksTab> createState() => _TasksTabState();

@@ -19,6 +19,7 @@ class Tasks extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Slidable(
+        key: ValueKey(task.id.hashCode), 
         startActionPane: ActionPane(
           motion: const ScrollMotion(),
           dismissible: DismissiblePane(onDismissed: () {}),
