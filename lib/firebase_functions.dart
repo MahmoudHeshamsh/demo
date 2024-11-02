@@ -22,8 +22,16 @@ class FirebaseFunctions {
     return querySnapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
-  static Future<void> deleteTaskFromFirestore(String taskId){
+  static Future<void> deleteTaskFromFirestore(String taskId) {
     CollectionReference<TaskModels> taskCollection = getTaskCollection();
     return taskCollection.doc(taskId).delete();
+  }
+
+  static Future<void> updateTaskFromFirestore(String taskId, String newTitle ,String newDescription) {
+    CollectionReference<TaskModels> taskCollection = getTaskCollection();
+    return taskCollection.doc(taskId).update({
+      'title': newTitle,
+      'description':newDescription,
+    });
   }
 }
