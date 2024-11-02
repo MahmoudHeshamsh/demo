@@ -5,28 +5,39 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
+import 'package:todo_app/compnent/com_elevated_button.dart';
+import 'package:todo_app/compnent/com_text_form_field.dart';
 import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/models/task_models.dart';
 import 'package:todo_app/tabs/tasks/tasks_provider.dart';
 
-class Tasks extends StatelessWidget {
+class Tasks extends StatefulWidget {
   TaskModels task;
 
   Tasks(this.task);
+
+  @override
+  State<Tasks> createState() => _TasksState();
+}
+
+class _TasksState extends State<Tasks> {
+  TextEditingController newTitleController = TextEditingController();
+  TextEditingController newDescriptionController = TextEditingController();
+  bool isEditActive = false;
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Slidable(
-        key: ValueKey(task.id.hashCode), 
         startActionPane: ActionPane(
           motion: const ScrollMotion(),
           dismissible: DismissiblePane(onDismissed: () {}),
           children: [
             SlidableAction(
               onPressed: (_) {
-                FirebaseFunctions.deleteTaskFromFirestore(task.id)
+                FirebaseFunctions.deleteTaskFromFirestore(widget.task.id)
                     .timeout(Duration(milliseconds: 100), onTimeout: () {
                   Provider.of<TasksProvider>(context,listen: false).getTasks();
                 }).catchError((error){
@@ -65,7 +76,7 @@ class Tasks extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    task.title,
+                    widget.task.title,
                     style: theme.textTheme.titleMedium
                         ?.copyWith(color: AppTheme.primary),
                   ),
@@ -73,7 +84,7 @@ class Tasks extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    task.description,
+                    widget.task.description,
                     style: theme.textTheme.titleSmall,
                   )
                 ],
