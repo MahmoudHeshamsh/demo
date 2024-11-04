@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
+import 'package:todo_app/auth/user_provider.dart';
+import 'package:todo_app/tabs/settings/settings_provider.dart';
 import 'package:todo_app/tabs/tasks/tasks.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:todo_app/firebase_functions.dart';
@@ -14,12 +16,17 @@ class TasksTab extends StatefulWidget {
 }
 
 class _TasksTabState extends State<TasksTab> {
+  
   bool getTasksProvider = true;
   @override
   Widget build(BuildContext context) {
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+
+    String userId = Provider.of<UserProvider>(context,listen: false).currentUser!.id;
+
     if (getTasksProvider) {
-      tasksProvider.getTasks();
+      tasksProvider.getTasks(userId);
       getTasksProvider = false;
     }
     return Column(
@@ -37,12 +44,13 @@ class _TasksTabState extends State<TasksTab> {
               child: Text(
                 'To Do List',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppTheme.white,
+                  color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,
+
                       fontSize: 22,
                     ),
               ),
             ),
-            Padding(
+            Padding( 
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.15),
               child: EasyInfiniteDateTimeLine(
@@ -51,7 +59,7 @@ class _TasksTabState extends State<TasksTab> {
                 lastDate: DateTime.now().add(const Duration(days: 30)),
                 onDateChange: (selectedDate) {
                   tasksProvider.changeSelectedDate(selectedDate);
-                  tasksProvider.getTasks();
+                  tasksProvider.getTasks(userId);
                 },
                 showTimelineHeader: false,
                 dayProps: EasyDayProps(
@@ -61,7 +69,8 @@ class _TasksTabState extends State<TasksTab> {
                   activeDayStyle: DayStyle(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: AppTheme.white),
+                          color: settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,
+),
                       dayNumStyle: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -73,27 +82,28 @@ class _TasksTabState extends State<TasksTab> {
                   inactiveDayStyle: DayStyle(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: AppTheme.white),
-                      dayNumStyle: const TextStyle(
+                          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,
+                                ),
+                      dayNumStyle: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.black),
-                      dayStrStyle: const TextStyle(
+                          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.white,),
+                      dayStrStyle:  TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.black)),
+                          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.white)),
                   todayStyle: DayStyle(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: AppTheme.white),
-                      dayNumStyle: const TextStyle(
+                          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,),
+                      dayNumStyle:  TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.black),
-                      dayStrStyle: const TextStyle(
+                          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.white),
+                      dayStrStyle: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.black)),
+                          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.white)),
                 ),
               ),
             ),

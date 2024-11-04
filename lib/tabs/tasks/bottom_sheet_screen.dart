@@ -5,10 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
+import 'package:todo_app/auth/user_provider.dart';
 import 'package:todo_app/compnent/com_elevated_button.dart';
 import 'package:todo_app/compnent/com_text_form_field.dart';
 import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/models/task_models.dart';
+import 'package:todo_app/tabs/settings/settings_provider.dart';
 import 'package:todo_app/tabs/tasks/tasks_provider.dart';
 
 class BottomSheetScreen extends StatefulWidget {
@@ -30,12 +32,17 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
   var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+      SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context); 
+
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         decoration: BoxDecoration(
-          color: AppTheme.white,
-          borderRadius: BorderRadius.circular(25),
+          color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
         ),
         padding: const EdgeInsets.all(20),
         height: MediaQuery.sizeOf(context).height * 0.45,
@@ -119,15 +126,15 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
   }
 
   void addTask() {
+    String userId = Provider.of<UserProvider>(context,listen: false).currentUser!.id;
     TaskModels taskModel = TaskModels(
         title: taskController.text,
         description: discriptionController.text,
         date: selectedDate);
-    FirebaseFunctions.addTaskToFirestore(taskModel).timeout(
-      Duration(milliseconds: 100),
-      onTimeout: () {
+    FirebaseFunctions.addTaskToFirestore(taskModel, userId).then(
+    (_) {
         Navigator.of(context).pop();
-        Provider.of<TasksProvider>(context,listen: false).getTasks();
+        Provider.of<TasksProvider>(context,listen: false).getTasks(userId);
         Fluttertoast.showToast(
         msg: "Tasks add succefully",
         toastLength: Toast.LENGTH_LONG,

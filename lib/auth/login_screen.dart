@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
 import 'package:todo_app/auth/register_screen.dart';
+import 'package:todo_app/auth/user_provider.dart';
 import 'package:todo_app/compnent/com_elevated_button.dart';
 import 'package:todo_app/compnent/com_text_form_field.dart';
+import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -42,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: 'Email',
                   validator: (value) {
                     if (value == null || value.trim().length <= 5) {
-                      return 'Your email can not be less than 5 character';
+                      return null;
                     }
                     return null;
                   }),
@@ -54,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: 'Passward',
                   validator: (value) {
                     if (value == null || value.trim().length <= 8) {
-                      return 'Your passward can not be less than 8 character';
+                      return null;
                     }
                     return null;
                   },
@@ -68,11 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: ComElevatedButton(
                   label: 'Login',
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                          Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-                      }
-                  }),
+                  onPressed: login ),
             ),
             SizedBox(
               height: 15,
@@ -109,5 +109,26 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+  void login(){
+    if (formKey.currentState!.validate()) {
+      FirebaseFunctions.login(
+              email: emailController.text,
+              password: passwardController.text)
+          .then((user) {
+        Provider.of<UserProvider>(context,listen: false).updateUser(user);
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        print('success');
+      }).catchError((error) {
+        Fluttertoast.showToast(
+          msg: "Something went wrong",
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      });
+    }
   }
 }

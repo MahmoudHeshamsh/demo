@@ -45,6 +45,11 @@ class AppTheme {
         color: black,
         fontSize: 14,
         fontWeight: FontWeight.w400
+      ),
+      titleLarge: TextStyle(
+        color: white,
+        fontSize: 14,
+        fontWeight: FontWeight.w400
       )
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -76,7 +81,7 @@ class AppTheme {
       shape: CircleBorder(
         side: BorderSide(
           width: 4,
-          color: white
+          color: black
         )
       ),
     ),
@@ -88,6 +93,11 @@ class AppTheme {
       ),
       titleSmall: TextStyle(
         color: white,
+        fontSize: 14,
+        fontWeight: FontWeight.w400
+      ),
+      titleLarge: TextStyle(
+        color: black,
         fontSize: 14,
         fontWeight: FontWeight.w400
       )

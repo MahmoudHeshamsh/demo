@@ -5,10 +5,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
+import 'package:todo_app/auth/user_provider.dart';
 import 'package:todo_app/compnent/com_elevated_button.dart';
 import 'package:todo_app/compnent/com_text_form_field.dart';
 import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/models/task_models.dart';
+import 'package:todo_app/tabs/settings/settings_provider.dart';
 import 'package:todo_app/tabs/tasks/tasks_provider.dart';
 
 class Tasks extends StatefulWidget {
@@ -27,6 +29,10 @@ class _TasksState extends State<Tasks> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+        String userId = Provider.of<UserProvider>(context,listen: false).currentUser!.id;
+
+
     ThemeData theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -40,10 +46,10 @@ class _TasksState extends State<Tasks> {
               children: [
                 SlidableAction(
                   onPressed: (_) {
-                    FirebaseFunctions.deleteTaskFromFirestore(widget.task.id)
-                        .timeout(Duration(milliseconds: 100), onTimeout: () {
+                    FirebaseFunctions.deleteTaskFromFirestore(widget.task.id,userId)
+                        .then ((_) {
                       Provider.of<TasksProvider>(context, listen: false)
-                          .getTasks();
+                          .getTasks(userId);
                     }).catchError((error) {
                       Fluttertoast.showToast(
                         msg: "Something went wrong",
@@ -67,8 +73,7 @@ class _TasksState extends State<Tasks> {
                   onPressed: (_) {
                     setState(() {
                       isEditActive = !isEditActive;
-                      newTitleController.text =
-                          widget.task.title; 
+                      newTitleController.text = widget.task.title;
                       newDescriptionController.text = widget.task.description;
                     });
                   },
@@ -85,7 +90,9 @@ class _TasksState extends State<Tasks> {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                  color: AppTheme.white,
+                  color: settingsProvider.themeMode == ThemeMode.light
+                      ? AppTheme.white
+                      : AppTheme.black,
                   borderRadius: BorderRadius.circular(15)),
               child: Row(
                 children: [
@@ -134,7 +141,7 @@ class _TasksState extends State<Tasks> {
               margin: EdgeInsets.only(top: 10),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                  color: AppTheme.white,
+                  color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
@@ -170,16 +177,17 @@ class _TasksState extends State<Tasks> {
                             widget.task.id,
                             newTitleController.text,
                             newDescriptionController.text,
-                          ).timeout(
-                            Duration(microseconds: 100),
-                            onTimeout: () {
+                            userId
+                          ).then(
+                            (_) {
                               setState(() {
                                 widget.task.title = newTitleController.text;
                                 widget.task.description =
                                     newDescriptionController.text;
                                 isEditActive = !isEditActive;
-                                Provider.of<TasksProvider>(context, listen: false)
-                          .getTasks();
+                                Provider.of<TasksProvider>(context,
+                                        listen: false)
+                                    .getTasks(userId);
                               });
                             },
                           ).catchError((error) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
+import 'package:todo_app/tabs/settings/settings_provider.dart';
 import 'package:todo_app/tabs/settings/settings_tab.dart';
 import 'package:todo_app/tabs/tasks/bottom_sheet_screen.dart';
 import 'package:todo_app/tabs/tasks/tasks_tab.dart';
@@ -14,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   void selectedScreen(int index) {
     setState(() {
       current_index = index;
@@ -29,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       body: tabs[current_index],
       bottomNavigationBar: BottomAppBar(

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
 import 'package:todo_app/auth/login_screen.dart';
+import 'package:todo_app/auth/user_provider.dart';
 import 'package:todo_app/compnent/com_elevated_button.dart';
 import 'package:todo_app/compnent/com_text_form_field.dart';
+import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -18,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController passwardController = TextEditingController();
   TextEditingController confirmedPasswardController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,10 +73,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: EdgeInsets.all(15.0),
                   child: ComTextFormField(
                     controller: passwardController,
-                    hintText: 'Passward',
+                    hintText: 'Password',
                     validator: (value) {
                       if (value == null || value.trim().length <= 8) {
-                        return 'Your passward can not be less than 8 character';
+                        return 'Your password can not be less than 8 character';
                       }
                       return null;
                     },
@@ -83,10 +87,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: EdgeInsets.all(15.0),
                   child: ComTextFormField(
                     controller: confirmedPasswardController,
-                    hintText: 'Confirm Passward',
+                    hintText: 'Confirm Password',
                     validator: (value) {
-                      if (value == null || confirmedPasswardController.text == passwardController.text) {
-                        return 'Your passward not matching';
+                      if (value == null ||
+                          confirmedPasswardController.text !=
+                              passwardController.text) {
+                        return 'Your password not matching';
                       }
                       return null;
                     },
@@ -98,29 +104,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: ComElevatedButton(
-                      label: 'Sign Up',
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          Navigator.of(context).pushNamed(HomeScreen.routeName);
-                        }
-                      }),
+                  child:
+                      ComElevatedButton(label: 'Sign Up', onPressed: register),
                 ),
                 SizedBox(
                   height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+                    Navigator.of(context)
+                        .pushReplacementNamed(LoginScreen.routeName);
                   },
                   child: Text(
                     'Already have an account',
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
-                        .titleSmall!.copyWith(
-                    color: AppTheme.primary
-                  ),
+                        .titleSmall!
+                        .copyWith(color: AppTheme.primary),
                   ),
                 ),
               ],
@@ -129,5 +130,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  void register() {
+    if (formKey.currentState!.validate()) {
+      FirebaseFunctions.register(
+              name: nameController.text,
+              email: emailController.text,
+              password: passwardController.text)
+          .then((user) {
+        FirebaseFunctions.logout();
+        Provider.of<UserProvider>(context, listen: false).updateUser(user);
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        print('success');
+      }).catchError((error) {
+        Fluttertoast.showToast(
+          msg: "Something went wrong",
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      });
+    }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/app_theme.dart';
+import 'package:todo_app/tabs/settings/settings_provider.dart';
 
 class ComTextFormField extends StatefulWidget {
   TextEditingController controller;
@@ -20,12 +22,18 @@ class ComTextFormField extends StatefulWidget {
 }
 
 class _ComTextFormFieldState extends State<ComTextFormField> {
+
   late bool isVisible = widget.isPassward;
   @override
   Widget build(BuildContext context) {
+  SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+
     return TextFormField(
       controller: widget.controller,
       validator: widget.validator,
+      style: TextStyle(
+        color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.white 
+      ),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       obscureText: isVisible,
       decoration: InputDecoration(
