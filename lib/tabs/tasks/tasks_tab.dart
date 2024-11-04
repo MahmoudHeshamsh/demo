@@ -8,6 +8,8 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/models/task_models.dart';
 import 'package:todo_app/tabs/tasks/tasks_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class TasksTab extends StatefulWidget {
 
@@ -42,7 +44,7 @@ class _TasksTabState extends State<TasksTab> {
               top: MediaQuery.of(context).size.height * 0.09,
               start: 30,
               child: Text(
-                'To Do List',
+                AppLocalizations.of(context)!.to_do_list,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.white : AppTheme.black,
 

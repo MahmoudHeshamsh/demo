@@ -32,11 +32,12 @@ class _ComTextFormFieldState extends State<ComTextFormField> {
       controller: widget.controller,
       validator: widget.validator,
       style: TextStyle(
-        color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.white 
+        color:  settingsProvider.themeMode == ThemeMode.light? AppTheme.black : AppTheme.lightgray 
       ),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       obscureText: isVisible,
       decoration: InputDecoration(
+        helperMaxLines: 15,
         hintText: widget.hintText,
         suffixIcon: widget.isPassward
             ? IconButton(

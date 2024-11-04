@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -120,11 +121,15 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
         print('success');
       }).catchError((error) {
+        String? message;
+        if (error is FirebaseException) {
+          message = error.message;
+        }
         Fluttertoast.showToast(
-          msg: "Something went wrong",
+          msg: message ?? "Something went wrong",
           toastLength: Toast.LENGTH_LONG,
           timeInSecForIosWeb: 5,
-          backgroundColor: Colors.grey,
+          backgroundColor: AppTheme.red,
           textColor: Colors.white,
           fontSize: 16.0,
         );

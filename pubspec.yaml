@@ -43,6 +43,10 @@ dependencies:
   fluttertoast: ^8.2.8
   flutter_slidable: ^3.1.1
   firebase_auth: ^5.3.1
+  flutter_localizations:
+    sdk: flutter
+  shared_preferences: ^2.3.2
+
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +59,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
   flutter_native_splash: ^2.4.1
+
   
 
 # For information on the generic Dart part of this file, see the
@@ -67,6 +72,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:

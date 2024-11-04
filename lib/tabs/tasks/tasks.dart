@@ -12,6 +12,10 @@ import 'package:todo_app/firebase_functions.dart';
 import 'package:todo_app/models/task_models.dart';
 import 'package:todo_app/tabs/settings/settings_provider.dart';
 import 'package:todo_app/tabs/tasks/tasks_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 
 class Tasks extends StatefulWidget {
   TaskModels task;
@@ -64,7 +68,7 @@ class _TasksState extends State<Tasks> {
                   backgroundColor: AppTheme.red,
                   foregroundColor: AppTheme.white,
                   icon: Icons.delete,
-                  label: 'Delete',
+                  label: AppLocalizations.of(context)!.delete,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10)),
@@ -80,7 +84,7 @@ class _TasksState extends State<Tasks> {
                   backgroundColor: AppTheme.gray,
                   foregroundColor: AppTheme.white,
                   icon: Icons.edit,
-                  label: 'Edit',
+                  label: AppLocalizations.of(context)!.edit,
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(10),
                       bottomRight: Radius.circular(10)),
@@ -120,16 +124,42 @@ class _TasksState extends State<Tasks> {
                     ],
                   ),
                   const Spacer(),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: AppTheme.primary,
-                        borderRadius: BorderRadius.circular(10)),
-                    width: 69,
-                    height: 34,
-                    child: const Icon(
-                      Icons.check,
-                      size: 32,
-                      color: AppTheme.white,
+                  InkWell(
+                    onTap: (){
+                    FirebaseFunctions.deleteTaskFromFirestore(widget.task.id,userId)
+                        .then ((_) {
+                      Provider.of<TasksProvider>(context, listen: false)
+                          .getTasks(userId);
+                      Fluttertoast.showToast(
+                        msg: "the task id done successfully!",
+                        toastLength: Toast.LENGTH_LONG,
+                        timeInSecForIosWeb: 5,
+                        backgroundColor: AppTheme.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    }).catchError((error) {
+                      Fluttertoast.showToast(
+                        msg: "Something went wrong",
+                        toastLength: Toast.LENGTH_LONG,
+                        timeInSecForIosWeb: 5,
+                        backgroundColor: Colors.grey,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    });                
+                      },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: AppTheme.primary,
+                          borderRadius: BorderRadius.circular(10)),
+                      width: 69,
+                      height: 34,
+                      child: const Icon(
+                        Icons.check,
+                        size: 32,
+                        color: AppTheme.white,
+                      ),
                     ),
                   ),
                 ],
@@ -171,7 +201,7 @@ class _TasksState extends State<Tasks> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ComElevatedButton(
-                        label: 'Save',
+                        label: AppLocalizations.of(context)!.save,
                         onPressed: () {
                           FirebaseFunctions.updateTaskFromFirestore(
                             widget.task.id,
@@ -201,7 +231,7 @@ class _TasksState extends State<Tasks> {
                         },
                       ),
                       ComElevatedButton(
-                        label: 'Cancel',
+                        label: AppLocalizations.of(context)!.cancel,
                         onPressed: () {
                           setState(() {
                             isEditActive = !isEditActive;

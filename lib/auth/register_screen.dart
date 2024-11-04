@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       hintText: 'Email',
                       validator: (value) {
                         if (value == null || value.trim().length <= 5) {
-                          return 'Your email can not be less than 5 character';
+                          return null;
                         }
                         return null;
                       }),
@@ -144,11 +145,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
         print('success');
       }).catchError((error) {
+        String? message;
+        if (error is FirebaseException) {
+          message = error.message;
+        }
         Fluttertoast.showToast(
-          msg: "Something went wrong",
+          msg: message ?? "Something went wrong",
           toastLength: Toast.LENGTH_LONG,
           timeInSecForIosWeb: 5,
-          backgroundColor: Colors.grey,
+          backgroundColor: AppTheme.red,
           textColor: Colors.white,
           fontSize: 16.0,
         );
